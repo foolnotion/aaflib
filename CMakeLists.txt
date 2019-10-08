@@ -17,17 +17,29 @@ add_library(
 )
 target_compile_definitions(aaf.lin64 PRIVATE LIN64 USE_AAF_EXTENSIONS)
 target_compile_options(aaf.lin64 PRIVATE -Wall -Weffc++ -Wno-deprecated -O3)
+set_target_properties(
+    aaf.lin64 PROPERTIES
+    SOVERSION 0
+    VERSION 0.1.0
+    )
 
 add_library(
     aaf.lin64.static
     STATIC 
     ${AAF_SOURCE}
 )
+set_target_properties(
+    aaf.lin64.static PROPERTIES
+    SOVERSION 0
+    VERSION 0.1.0
+    )
+
 target_compile_definitions(aaf.lin64.static PRIVATE LIN64 USE_AAF_EXTENSIONS)
 target_compile_options(aaf.lin64.static PRIVATE -Wall -Weffc++ -Wno-deprecated -O3)
 set_target_properties(aaf.lin64.static PROPERTIES OUTPUT_NAME aaf.lin64)
 
 include(GNUInstallDirs)
+set(AAF_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR}/aaf)
 install(FILES ${AAF_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT devel)
 install(TARGETS aaf.lin64 DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT core)
 install(TARGETS aaf.lin64.static DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT core)

@@ -21,10 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 #include "aa.h"
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 
 /************************************************************
  * Operator:      +=
@@ -35,12 +34,11 @@
  *   Input  : double : double value to be added
  *   Output : AAF
  ************************************************************/
-AAF & AAF::operator += (double cst)
+AAF& AAF::operator+=(double cst)
 {
-  cvalue += cst;
-  return (*this);
+    cvalue += cst;
+    return (*this);
 }
-
 
 /************************************************************
  * Operator:      -=
@@ -51,12 +49,11 @@ AAF & AAF::operator += (double cst)
  *   Input  : double : double value to be subtracted
  *   Output : AAF
  ************************************************************/
-AAF & AAF::operator -= (double cst)
+AAF& AAF::operator-=(double cst)
 {
-  cvalue -= cst;
-  return (*this);
+    cvalue -= cst;
+    return (*this);
 }
-
 
 /************************************************************
  * Operator:      *=
@@ -67,17 +64,17 @@ AAF & AAF::operator -= (double cst)
  *   Input  : double : double value to be multiplied by
  *   Output : AAF
  ************************************************************/
-AAF & AAF::operator *= (double cst)
+AAF& AAF::operator*=(double cst)
 {
-  cvalue *= cst;
-  for (unsigned int i = 0; i < length; i++)
-    deviations[i] *= cst;
+    cvalue *= cst;
+    for (unsigned int i = 0; i < length; i++)
+        deviations[i] *= cst;
 
 #ifdef FAST_RAD
-  radius *= fabs(cst);
+    radius *= fabs(cst);
 #endif
 
-  return (*this);
+    return (*this);
 }
 
 /************************************************************
@@ -89,20 +86,19 @@ AAF & AAF::operator *= (double cst)
  *   Input  : double : double value to be divided by
  *   Output : AAF
  ************************************************************/
-AAF & AAF::operator /= (double cst)
+AAF& AAF::operator/=(double cst)
 {
-  cst = 1.0/cst;
-  cvalue *= cst;
-  for (unsigned int i = 0; i < length; i++)
-    deviations[i] *= cst;
+    cst = 1.0 / cst;
+    cvalue *= cst;
+    for (unsigned int i = 0; i < length; i++)
+        deviations[i] *= cst;
 
 #ifdef FAST_RAD
-  radius *= fabs(cst);
+    radius *= fabs(cst);
 #endif
 
-  return (*this);
+    return (*this);
 }
-
 
 /************************************************************
  * Operator:      +
@@ -113,96 +109,89 @@ AAF & AAF::operator /= (double cst)
  *   Input  : const AAF : AAF to be added
  *   Output : AAF
  ************************************************************/
-AAF AAF::operator + (const AAF & P) const
+AAF AAF::operator+(const AAF& P) const
 {
-  unsigned l1 = length;
-  unsigned l2 = P.length;
+    unsigned l1 = length;
+    unsigned l2 = P.length;
 
-  if (l1+l2 == 0)
-  {
-    AAF Temp(cvalue+P.cvalue);
-    return (Temp);
-  }
-
-  if (l1 == 0)
-  {
-    AAF Temp(P);
-    Temp += cvalue;
-    return (Temp);
-  }
-
-  if (l2 == 0)
-  {
-    AAF Temp(*this);
-    Temp += P.cvalue;
-    return (Temp);
-  }
-
-  // Create our resulting AAF
-  AAF Temp(cvalue + P.cvalue);
-
-  unsigned * id1=indexes;
-  unsigned * id2=P.indexes;
-
-  double * va1=deviations;
-  double * va2=P.deviations;
-
-  unsigned * pu1=id1;
-  unsigned * pu2=id2;
-
-  if (l1+l2)
-    Temp.indexes = new unsigned [l1+l2]; // the indexes of the result
-  unsigned * idtemp = Temp.indexes;
-
-  // Fill the resulting indexes array
-  // by merging the 2 input indexes array
-
-  unsigned * fin = std::set_union(id1,id1+l1,id2,id2+l2,idtemp);
-  unsigned ltemp = fin-idtemp;
-
-  if (ltemp)
-    Temp.deviations = new double [ltemp];
-  double * vatempg = Temp.deviations;
-
-  Temp.length = ltemp;
-  Temp.size = ltemp;
-
-  // Fill the deviations array
-  // of the resulting AAF
-
-  for (unsigned i = 0; i < ltemp; i++)
-  {
-    unsigned a = pu1-id1;
-    unsigned b = pu2-id2;
-
-    if (a == l1 || id1[a] != idtemp[i])
-    {
-      vatempg[i]=va2[b];  // va2[b]+0
-      pu2++;
-      continue;
+    if (l1 + l2 == 0) {
+        AAF Temp(cvalue + P.cvalue);
+        return (Temp);
     }
 
-    if (b == l2 || id2[b] != idtemp[i])
-    {
-      vatempg[i]=va1[a];  // va1[a]+0
-      pu1++;
-      continue;
+    if (l1 == 0) {
+        AAF Temp(P);
+        Temp += cvalue;
+        return (Temp);
     }
-    
-    vatempg[i]=va1[a] + va2[b];
-    pu1++;
-    pu2++;
-  }
+
+    if (l2 == 0) {
+        AAF Temp(*this);
+        Temp += P.cvalue;
+        return (Temp);
+    }
+
+    // Create our resulting AAF
+    AAF Temp(cvalue + P.cvalue);
+
+    unsigned* id1 = indexes;
+    unsigned* id2 = P.indexes;
+
+    double* va1 = deviations;
+    double* va2 = P.deviations;
+
+    unsigned* pu1 = id1;
+    unsigned* pu2 = id2;
+
+    if (l1 + l2)
+        Temp.indexes = new unsigned[l1 + l2]; // the indexes of the result
+    unsigned* idtemp = Temp.indexes;
+
+    // Fill the resulting indexes array
+    // by merging the 2 input indexes array
+
+    unsigned* fin = std::set_union(id1, id1 + l1, id2, id2 + l2, idtemp);
+    unsigned ltemp = fin - idtemp;
+
+    if (ltemp)
+        Temp.deviations = new double[ltemp];
+    double* vatempg = Temp.deviations;
+
+    Temp.length = ltemp;
+    Temp.size = ltemp;
+
+    // Fill the deviations array
+    // of the resulting AAF
+
+    for (unsigned i = 0; i < ltemp; i++) {
+        unsigned a = pu1 - id1;
+        unsigned b = pu2 - id2;
+
+        if (a == l1 || id1[a] != idtemp[i]) {
+            vatempg[i] = va2[b]; // va2[b]+0
+            pu2++;
+            continue;
+        }
+
+        if (b == l2 || id2[b] != idtemp[i]) {
+            vatempg[i] = va1[a]; // va1[a]+0
+            pu1++;
+            continue;
+        }
+
+        vatempg[i] = va1[a] + va2[b];
+        pu1++;
+        pu2++;
+    }
 
 #ifdef FAST_RAD
-  Temp.radius = 0.0;
-  for (unsigned i = 0; i < ltemp; i++)
-    Temp.radius += fabs(vatempg[i]);
+    Temp.radius = 0.0;
+    for (unsigned i = 0; i < ltemp; i++)
+        Temp.radius += fabs(vatempg[i]);
 #endif
-  
-  return Temp;
-}
 
+    return Temp;
+}
 
 /************************************************************
  * Operator:      +=
@@ -213,104 +202,97 @@ AAF AAF::operator + (const AAF & P) const
  *   Input  : const AAF : AAF to be added
  *   Output : AAF &     : *this
  ************************************************************/
-AAF & AAF::operator += (const AAF & P)
+AAF& AAF::operator+=(const AAF& P)
 {
-  unsigned l1 = length;
-  unsigned l2 = P.length;
+    unsigned l1 = length;
+    unsigned l2 = P.length;
 
-  if (l1+l2 == 0)
-  {
-    cvalue += P.cvalue;
-    return (*this);
-  }
-
-  if (l1 == 0)
-  {
-    double c = cvalue;
-    *this = P;
-    cvalue += c;
-    return (*this);
-  }
-
-  if (l2 == 0)
-  {
-    cvalue += P.cvalue;
-    return (*this);
-  }
-
-  // Create our resulting AAF
-
-  unsigned * id1 = indexes;
-  unsigned * id2 = P.indexes;
-
-  double * va1 = deviations;
-  double * va2 = P.deviations;
-
-  unsigned * pu1 = id1;
-  unsigned * pu2 = id2;
-
-  unsigned * tempIndexes = NULL;
-  double * tempDeviations = NULL;
-
-  if (l1+l2)
-    tempIndexes = new unsigned [l1+l2]; // the indexes of the result
-  unsigned * idtemp = tempIndexes;
-
-  // Fill the resulting indexes array
-  // by merging the 2 input indexes array
-
-  unsigned * fin = std::set_union(id1,id1+l1,id2,id2+l2,idtemp);
-  unsigned ltemp = fin-idtemp;
-
-  if (ltemp)
-    tempDeviations = new double [ltemp];
-  double * vatempg = tempDeviations;
-
-  // Fill the deviations array
-  // of the resulting AAF
-
-  for (unsigned i = 0; i < ltemp; i++)
-  {
-    unsigned a = pu1-id1;
-    unsigned b = pu2-id2;
-
-    if (a == l1 || id1[a] != idtemp[i])
-    {
-      vatempg[i]=va2[b];  // va2[b]+0
-      pu2++;
-      continue;
+    if (l1 + l2 == 0) {
+        cvalue += P.cvalue;
+        return (*this);
     }
 
-    if (b == l2 || id2[b] != idtemp[i])
-    {
-      vatempg[i]=va1[a];  // va1[a]+0
-      pu1++;
-      continue;
+    if (l1 == 0) {
+        double c = cvalue;
+        *this = P;
+        cvalue += c;
+        return (*this);
     }
-    
-    vatempg[i]=va1[a] + va2[b];
-    pu1++;
-    pu2++;
-  }
 
-  // set new properties
-  length = ltemp;
-  size = ltemp;
-  delete [] deviations;
-  delete [] indexes;
-  deviations = tempDeviations;
-  indexes = tempIndexes;
-  cvalue += P.cvalue;
+    if (l2 == 0) {
+        cvalue += P.cvalue;
+        return (*this);
+    }
+
+    // Create our resulting AAF
+
+    unsigned* id1 = indexes;
+    unsigned* id2 = P.indexes;
+
+    double* va1 = deviations;
+    double* va2 = P.deviations;
+
+    unsigned* pu1 = id1;
+    unsigned* pu2 = id2;
+
+    unsigned* tempIndexes = NULL;
+    double* tempDeviations = NULL;
+
+    if (l1 + l2)
+        tempIndexes = new unsigned[l1 + l2]; // the indexes of the result
+    unsigned* idtemp = tempIndexes;
+
+    // Fill the resulting indexes array
+    // by merging the 2 input indexes array
+
+    unsigned* fin = std::set_union(id1, id1 + l1, id2, id2 + l2, idtemp);
+    unsigned ltemp = fin - idtemp;
+
+    if (ltemp)
+        tempDeviations = new double[ltemp];
+    double* vatempg = tempDeviations;
+
+    // Fill the deviations array
+    // of the resulting AAF
+
+    for (unsigned i = 0; i < ltemp; i++) {
+        unsigned a = pu1 - id1;
+        unsigned b = pu2 - id2;
+
+        if (a == l1 || id1[a] != idtemp[i]) {
+            vatempg[i] = va2[b]; // va2[b]+0
+            pu2++;
+            continue;
+        }
+
+        if (b == l2 || id2[b] != idtemp[i]) {
+            vatempg[i] = va1[a]; // va1[a]+0
+            pu1++;
+            continue;
+        }
+
+        vatempg[i] = va1[a] + va2[b];
+        pu1++;
+        pu2++;
+    }
+
+    // set new properties
+    length = ltemp;
+    size = ltemp;
+    delete[] deviations;
+    delete[] indexes;
+    deviations = tempDeviations;
+    indexes = tempIndexes;
+    cvalue += P.cvalue;
 
 #ifdef FAST_RAD
-  radius = 0.0;
-  for (unsigned i = 0; i < ltemp; i++)
-    radius += fabs(vatempg[i]);
+    radius = 0.0;
+    for (unsigned i = 0; i < ltemp; i++)
+        radius += fabs(vatempg[i]);
 #endif
-  
-  return *this;
-}
 
+    return *this;
+}
 
 /************************************************************
  * Operator:      -
@@ -321,95 +303,88 @@ AAF & AAF::operator += (const AAF & P)
  *   Input  : const AAF : AAF to be subtracted
  *   Output : AAF
  ************************************************************/
-AAF AAF::operator - (const AAF & P) const
+AAF AAF::operator-(const AAF& P) const
 {
-  unsigned l1 = length;
-  unsigned l2 = P.length;
+    unsigned l1 = length;
+    unsigned l2 = P.length;
 
-  if (l1+l2 == 0)
-  {
-    AAF Temp(cvalue-P.cvalue);
-    return (Temp);
-  }
-
-  if (l1 == 0)
-  {
-    AAF Temp(P);
-    Temp *= -1.0;
-    Temp += cvalue;
-    return (Temp);
-  }
-
-  if (l2 == 0)
-  {
-    AAF Temp(*this);
-    Temp -= P.cvalue;
-    return (Temp);
-  }
-
-  // Create our resulting AAF
-  AAF Temp(cvalue-P.cvalue);
-
-  unsigned * id1 = indexes;
-  unsigned * id2 = P.indexes;
-
-  double * va1 = deviations;
-  double * va2 = P.deviations;
-
-  unsigned * pu1 = id1;
-  unsigned * pu2 = id2;
-
-  Temp.indexes = new unsigned [l1+l2];
-  unsigned * idtemp = Temp.indexes;
-
-  // Fill the resulting indexes array
-  // by merging the 2 input indexes array
-
-  unsigned * fin = std::set_union(id1,id1+l1,id2,id2+l2,idtemp);
-  unsigned ltemp = fin-idtemp;
-
-  Temp.deviations = new double [ltemp];
-  double * vatempg = Temp.deviations;
-
-  Temp.length = ltemp;
-  Temp.size = ltemp;
-
-  // Fill the deviations array
-  // of the resulting AAF
-  
-  for (unsigned i=0;i<ltemp;i++)
-  {
-    unsigned a = pu1-id1;
-    unsigned b = pu2-id2;
-
-    if (a == l1 || id1[a] != idtemp[i])
-    {
-      vatempg[i] = -va2[b];  // 0-va2[b]
-      pu2++;
-      continue;
-    }
-    
-    if (b == l2 || id2[b] != idtemp[i])
-    {
-      vatempg[i] = va1[a];  // va1[a]-0
-      pu1++;
-      continue;
+    if (l1 + l2 == 0) {
+        AAF Temp(cvalue - P.cvalue);
+        return (Temp);
     }
 
-    vatempg[i]=va1[a]-va2[b];
-    pu1++;
-    pu2++;
-  }
+    if (l1 == 0) {
+        AAF Temp(P);
+        Temp *= -1.0;
+        Temp += cvalue;
+        return (Temp);
+    }
+
+    if (l2 == 0) {
+        AAF Temp(*this);
+        Temp -= P.cvalue;
+        return (Temp);
+    }
+
+    // Create our resulting AAF
+    AAF Temp(cvalue - P.cvalue);
+
+    unsigned* id1 = indexes;
+    unsigned* id2 = P.indexes;
+
+    double* va1 = deviations;
+    double* va2 = P.deviations;
+
+    unsigned* pu1 = id1;
+    unsigned* pu2 = id2;
+
+    Temp.indexes = new unsigned[l1 + l2];
+    unsigned* idtemp = Temp.indexes;
+
+    // Fill the resulting indexes array
+    // by merging the 2 input indexes array
+
+    unsigned* fin = std::set_union(id1, id1 + l1, id2, id2 + l2, idtemp);
+    unsigned ltemp = fin - idtemp;
+
+    Temp.deviations = new double[ltemp];
+    double* vatempg = Temp.deviations;
+
+    Temp.length = ltemp;
+    Temp.size = ltemp;
+
+    // Fill the deviations array
+    // of the resulting AAF
+
+    for (unsigned i = 0; i < ltemp; i++) {
+        unsigned a = pu1 - id1;
+        unsigned b = pu2 - id2;
+
+        if (a == l1 || id1[a] != idtemp[i]) {
+            vatempg[i] = -va2[b]; // 0-va2[b]
+            pu2++;
+            continue;
+        }
+
+        if (b == l2 || id2[b] != idtemp[i]) {
+            vatempg[i] = va1[a]; // va1[a]-0
+            pu1++;
+            continue;
+        }
+
+        vatempg[i] = va1[a] - va2[b];
+        pu1++;
+        pu2++;
+    }
 
 #ifdef FAST_RAD
-  Temp.radius = 0.0;
-  for (unsigned i = 0; i < ltemp; i++)
-    Temp.radius += fabs(vatempg[i]);
+    Temp.radius = 0.0;
+    for (unsigned i = 0; i < ltemp; i++)
+        Temp.radius += fabs(vatempg[i]);
 #endif
-  
-  return Temp;
-}
 
+    return Temp;
+}
 
 /************************************************************
  * Operator:      -=
@@ -420,104 +395,97 @@ AAF AAF::operator - (const AAF & P) const
  *   Input  : const AAF : AAF to be subtracted
  *   Output : AAF &     : *this
  ************************************************************/
-AAF & AAF::operator -= (const AAF & P)
+AAF& AAF::operator-=(const AAF& P)
 {
-  unsigned l1 = length;
-  unsigned l2 = P.length;
+    unsigned l1 = length;
+    unsigned l2 = P.length;
 
-  if (l1+l2 == 0)
-  {
-    cvalue -= P.cvalue;
-    return (*this);
-  }
-
-  if (l1 == 0)
-  {
-    double c = cvalue;
-    *this = -P;
-    cvalue += c;
-    return (*this);
-  }
-
-  if (l2 == 0)
-  {
-    cvalue -= P.cvalue;
-    return (*this);
-  }
-
-  // Create our resulting AAF
-
-  unsigned * id1 = indexes;
-  unsigned * id2 = P.indexes;
-
-  double * va1 = deviations;
-  double * va2 = P.deviations;
-
-  unsigned * pu1 = id1;
-  unsigned * pu2 = id2;
-
-  unsigned * tempIndexes = NULL;
-  double * tempDeviations = NULL;
-
-  if (l1+l2)
-    tempIndexes = new unsigned [l1+l2]; // the indexes of the result
-  unsigned * idtemp = tempIndexes;
-
-  // Fill the resulting indexes array
-  // by merging the 2 input indexes array
-
-  unsigned * fin = std::set_union(id1,id1+l1,id2,id2+l2,idtemp);
-  unsigned ltemp = fin-idtemp;
-
-  if (ltemp)
-    tempDeviations = new double [ltemp];
-  double * vatempg = tempDeviations;
-
-  // Fill the deviations array
-  // of the resulting AAF
-
-  for (unsigned i = 0; i < ltemp; i++)
-  {
-    unsigned a = pu1-id1;
-    unsigned b = pu2-id2;
-
-    if (a == l1 || id1[a] != idtemp[i])
-    {
-      vatempg[i]=-va2[b];  // -va2[b]+0
-      pu2++;
-      continue;
+    if (l1 + l2 == 0) {
+        cvalue -= P.cvalue;
+        return (*this);
     }
 
-    if (b == l2 || id2[b] != idtemp[i])
-    {
-      vatempg[i]=va1[a];  // va1[a]-0
-      pu1++;
-      continue;
+    if (l1 == 0) {
+        double c = cvalue;
+        *this = -P;
+        cvalue += c;
+        return (*this);
     }
-    
-    vatempg[i]=va1[a] - va2[b];
-    pu1++;
-    pu2++;
-  }
 
-  // set new properties
-  length = ltemp;
-  size = ltemp;
-  delete [] deviations;
-  delete [] indexes;
-  deviations = tempDeviations;
-  indexes = tempIndexes;
-  cvalue -= P.cvalue;
+    if (l2 == 0) {
+        cvalue -= P.cvalue;
+        return (*this);
+    }
+
+    // Create our resulting AAF
+
+    unsigned* id1 = indexes;
+    unsigned* id2 = P.indexes;
+
+    double* va1 = deviations;
+    double* va2 = P.deviations;
+
+    unsigned* pu1 = id1;
+    unsigned* pu2 = id2;
+
+    unsigned* tempIndexes = NULL;
+    double* tempDeviations = NULL;
+
+    if (l1 + l2)
+        tempIndexes = new unsigned[l1 + l2]; // the indexes of the result
+    unsigned* idtemp = tempIndexes;
+
+    // Fill the resulting indexes array
+    // by merging the 2 input indexes array
+
+    unsigned* fin = std::set_union(id1, id1 + l1, id2, id2 + l2, idtemp);
+    unsigned ltemp = fin - idtemp;
+
+    if (ltemp)
+        tempDeviations = new double[ltemp];
+    double* vatempg = tempDeviations;
+
+    // Fill the deviations array
+    // of the resulting AAF
+
+    for (unsigned i = 0; i < ltemp; i++) {
+        unsigned a = pu1 - id1;
+        unsigned b = pu2 - id2;
+
+        if (a == l1 || id1[a] != idtemp[i]) {
+            vatempg[i] = -va2[b]; // -va2[b]+0
+            pu2++;
+            continue;
+        }
+
+        if (b == l2 || id2[b] != idtemp[i]) {
+            vatempg[i] = va1[a]; // va1[a]-0
+            pu1++;
+            continue;
+        }
+
+        vatempg[i] = va1[a] - va2[b];
+        pu1++;
+        pu2++;
+    }
+
+    // set new properties
+    length = ltemp;
+    size = ltemp;
+    delete[] deviations;
+    delete[] indexes;
+    deviations = tempDeviations;
+    indexes = tempIndexes;
+    cvalue -= P.cvalue;
 
 #ifdef FAST_RAD
-  radius = 0.0;
-  for (unsigned i = 0; i < ltemp; i++)
-    radius += fabs(vatempg[i]);
+    radius = 0.0;
+    for (unsigned i = 0; i < ltemp; i++)
+        radius += fabs(vatempg[i]);
 #endif
-  
-  return *this;
-}
 
+    return *this;
+}
 
 /************************************************************
  * Operator:      -
@@ -528,19 +496,17 @@ AAF & AAF::operator -= (const AAF & P)
  *   Input  : const AAF : AAF to be multiplied by -1
  *   Output : AAF
  ************************************************************/
-AAF AAF::operator - () const
+AAF AAF::operator-() const
 {
-  AAF Temp(*this);
+    AAF Temp(*this);
 
-  Temp.cvalue = -(Temp.cvalue);
-  for (unsigned i = 0; i < length; i++)
-  {
-    Temp.deviations[i] = -(Temp.deviations[i]);
-  }
+    Temp.cvalue = -(Temp.cvalue);
+    for (unsigned i = 0; i < length; i++) {
+        Temp.deviations[i] = -(Temp.deviations[i]);
+    }
 
-  return Temp;
+    return Temp;
 }
-
 
 /************************************************************
  * Operator:      *
@@ -551,23 +517,21 @@ AAF AAF::operator - () const
  *   Input  : double : double to be multiplyed by
  *   Output : AAF
  ************************************************************/
-AAF AAF::operator * (double cst)
+AAF AAF::operator*(double cst)
 {
-  AAF Temp(*this);
-  Temp.cvalue = cst*cvalue;
+    AAF Temp(*this);
+    Temp.cvalue = cst * cvalue;
 
-  for (unsigned i = 0; i < length; i++)
-  {
-    Temp.deviations[i] = cst*(Temp.deviations[i]);
-  }
+    for (unsigned i = 0; i < length; i++) {
+        Temp.deviations[i] = cst * (Temp.deviations[i]);
+    }
 
 #ifdef FAST_RAD
-  Temp.radius = fabs(cst)*radius;
+    Temp.radius = fabs(cst) * radius;
 #endif
 
-  return Temp;
+    return Temp;
 }
-
 
 /************************************************************
  * Operator:      /
@@ -578,24 +542,22 @@ AAF AAF::operator * (double cst)
  *   Input  : double : double to be divided by
  *   Output : AAF
  ************************************************************/
-AAF AAF::operator / (double cst)
+AAF AAF::operator/(double cst)
 {
-  AAF Temp(*this);
-  Temp.cvalue = cvalue/cst;
+    AAF Temp(*this);
+    Temp.cvalue = cvalue / cst;
 
-  for (unsigned i = 0; i < length; i++)
-  {
-    Temp.deviations[i] = (Temp.deviations[i])/cst;
-  }
+    for (unsigned i = 0; i < length; i++) {
+        Temp.deviations[i] = (Temp.deviations[i]) / cst;
+    }
 
 #ifdef FAST_RAD
-  Temp.radius = radius/fabs(cst);
+    Temp.radius = radius / fabs(cst);
 #endif
-  return Temp;
+    return Temp;
 }
 
 // -- Non member AAF functions --
-
 
 /************************************************************
  * Operator:      *
@@ -607,12 +569,11 @@ AAF AAF::operator / (double cst)
  *            AAF    : AAF factor
  *   Output : AAF
  ************************************************************/
-AAF operator * (double cst, const AAF P)
+AAF operator*(double cst, const AAF P)
 {
-  AAF Temp(P);
-  return Temp*cst;
+    AAF Temp(P);
+    return Temp * cst;
 }
-
 
 /************************************************************
  * Operator:      +
@@ -624,13 +585,12 @@ AAF operator * (double cst, const AAF P)
  *            AAF    : AAF summand
  *   Output : AAF
  ************************************************************/
-AAF operator + (double cst, const AAF P)
+AAF operator+(double cst, const AAF P)
 {
-  AAF Temp(P);
-  Temp += cst;
-  return (Temp);
+    AAF Temp(P);
+    Temp += cst;
+    return (Temp);
 }
-
 
 /************************************************************
  * Operator:      +
@@ -642,9 +602,9 @@ AAF operator + (double cst, const AAF P)
  *            AAF    : AAF 
  *   Output : AAF
  ************************************************************/
-AAF operator - (double cst, AAF P)
+AAF operator-(double cst, AAF P)
 {
-  AAF Temp = -P;
-  Temp += cst;
-  return (Temp);
+    AAF Temp = -P;
+    Temp += cst;
+    return (Temp);
 }

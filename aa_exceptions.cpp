@@ -40,7 +40,6 @@
  * Distribution only by express authority of the IMS.
  */
 
-
 #include "aa_exceptions.h"
 #include <iostream>
 
@@ -54,11 +53,11 @@ using namespace std;
  *   Input  : 
  *   Output : 
  ************************************************************/
-AAF_Exception::AAF_Exception(const int errorCode_, const char *m, const double lValue_, const double hValue_):
-  message(m),
-  errorCode(errorCode_),
-  lValue(lValue_),
-  hValue(hValue_)
+AAF_Exception::AAF_Exception(const int errorCode_, const char* m, const double lValue_, const double hValue_)
+    : message(m)
+    , errorCode(errorCode_)
+    , lValue(lValue_)
+    , hValue(hValue_)
 {
 }
 
@@ -70,11 +69,11 @@ AAF_Exception::AAF_Exception(const int errorCode_, const char *m, const double l
  *   Input  : 
  *   Output : 
  ************************************************************/
-AAF_Exception::AAF_Exception(const int errorCode_, const char *m, const double lValue_):
-  message(m),
-  errorCode(errorCode_),
-  lValue(lValue_),
-  hValue(0)
+AAF_Exception::AAF_Exception(const int errorCode_, const char* m, const double lValue_)
+    : message(m)
+    , errorCode(errorCode_)
+    , lValue(lValue_)
+    , hValue(0)
 {
 }
 
@@ -86,11 +85,11 @@ AAF_Exception::AAF_Exception(const int errorCode_, const char *m, const double l
  *   Input  : 
  *   Output : 
  ************************************************************/
-AAF_Exception::AAF_Exception(const int errorCode_, const char *m):
-  message(m),
-  errorCode(errorCode_),
-  lValue(0),
-  hValue(0)
+AAF_Exception::AAF_Exception(const int errorCode_, const char* m)
+    : message(m)
+    , errorCode(errorCode_)
+    , lValue(0)
+    , hValue(0)
 {
 }
 
@@ -102,7 +101,7 @@ AAF_Exception::AAF_Exception(const int errorCode_, const char *m):
  *   Input  : 
  *   Output : 
  ************************************************************/
-AAF_Exception::~AAF_Exception() throw ()
+AAF_Exception::~AAF_Exception() throw()
 {
 }
 
@@ -114,9 +113,9 @@ AAF_Exception::~AAF_Exception() throw ()
  *   Input  : 
  *   Output : 
  ************************************************************/
-const char* AAF_Exception::what() const throw ()
+const char* AAF_Exception::what() const throw()
 {
-  return (message.c_str());
+    return (message.c_str());
 }
 
 /************************************************************
@@ -127,8 +126,8 @@ const char* AAF_Exception::what() const throw ()
  *   Input  : 
  *   Output : 
  ************************************************************/
-void AAF_Exception::report() const throw ()
+void AAF_Exception::report() const throw()
 {
-  cout << "Errorcode: " << errorCode << " " << message 
-       << " [" << lValue << "," << hValue << "]" << endl;
+    cout << "Errorcode: " << errorCode << " " << message
+         << " [" << lValue << "," << hValue << "]" << endl;
 }

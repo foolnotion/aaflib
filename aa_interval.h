@@ -21,7 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 #ifndef AA_INTERVAL_H
 #define AA_INTERVAL_H
 
@@ -30,35 +29,30 @@
 // A class for Interval representation
 // the class is used by our AAF class
 
-class AAInterval
-{
- private:
+class AAInterval {
+private:
+    double lo, hi;
 
-  double lo, hi;
+public:
+    AAInterval();
+    AAInterval(double, double);
+    AAInterval& operator=(const AAInterval&);
 
- public:
+    friend std::istream& operator>>(std::istream&, AAInterval&);
 
-  AAInterval();
-  AAInterval(double, double);
-  AAInterval & operator = (const AAInterval &);
-
-  friend std::istream & operator >> (std::istream &, AAInterval &);
-
-  double getlo() const;
-  double gethi() const;
-  void modlo(const double);
-  void modhi(const double);
-  void modlohi(const double, const double);
-  double mid() const;
-  double radius() const;
-  double width() const;
-  void intvprint() const;
-
+    double getlo() const;
+    double gethi() const;
+    void modlo(const double);
+    void modhi(const double);
+    void modlohi(const double, const double);
+    double mid() const;
+    double radius() const;
+    double width() const;
+    void intvprint() const;
 };
 
-std::ostream & operator << (std::ostream &, const AAInterval &);
-AAInterval mintrigo(const AAInterval &);
-
+std::ostream& operator<<(std::ostream&, const AAInterval&);
+AAInterval mintrigo(const AAInterval&);
 
 // Interval inline functions
 
@@ -72,11 +66,11 @@ AAInterval mintrigo(const AAInterval &);
  *            double : upper bound
  *   Output : -
  ************************************************************/
-inline AAInterval:: AAInterval(double l, double h):
-     lo(l), hi(h)
+inline AAInterval::AAInterval(double l, double h)
+    : lo(l)
+    , hi(h)
 {
 }
-
 
 /************************************************************
  * Method:        getlo
@@ -89,9 +83,8 @@ inline AAInterval:: AAInterval(double l, double h):
  ************************************************************/
 inline double AAInterval::getlo() const
 {
-  return lo;
+    return lo;
 }
-
 
 /************************************************************
  * Method:        getho
@@ -104,9 +97,8 @@ inline double AAInterval::getlo() const
  ************************************************************/
 inline double AAInterval::gethi() const
 {
-  return hi;
+    return hi;
 }
-
 
 /************************************************************
  * Method:        width
@@ -119,7 +111,7 @@ inline double AAInterval::gethi() const
  ************************************************************/
 inline double AAInterval::width() const
 {
-  return (hi-lo);
+    return (hi - lo);
 }
 
-#endif  // AA_INTERVAL_H
+#endif // AA_INTERVAL_H

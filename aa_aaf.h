@@ -21,17 +21,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 #ifndef AA_AAF_H
 #define AA_AAF_H
 
-#include "aa_interval.h"
 #include "aa_exceptions.h"
+#include "aa_interval.h"
 #include <iostream>
-#include <vector>
 #include <list>
+#include <vector>
 
-typedef enum {MINRANGE, CHEBYSHEV, SECANT} tApproximationType;
+typedef enum { MINRANGE,
+    CHEBYSHEV,
+    SECANT } tApproximationType;
 
 #define FAST_RAD
 
@@ -40,187 +41,185 @@ class QPF;
 #endif
 
 // Affine Arithmetic Form
-class AAF
-{
+class AAF {
 
- private:
-
-  // central value
-  double cvalue;
-  // length of indexes
-  unsigned length;
-  // array size of indexes and deviations
-  unsigned size;
+private:
+    // central value
+    double cvalue;
+    // length of indexes
+    unsigned length;
+    // array size of indexes and deviations
+    unsigned size;
 
 #ifdef FAST_RAD
-  double radius;
+    double radius;
 #endif
 
-  // At creation we don't store null deviations
+    // At creation we don't store null deviations
 
-  // values of parial deviations
-  double * deviations;
-  // indexes of partial deviations
-  unsigned * indexes;
+    // values of parial deviations
+    double* deviations;
+    // indexes of partial deviations
+    unsigned* indexes;
 
-  // current approximation type: <CHEBYSHEV> (default), <MINRANGE> or <SECANT>
-  static tApproximationType approximationType;
-  // highest deviation symbol in use
-  static unsigned last;
+    // current approximation type: <CHEBYSHEV> (default), <MINRANGE> or <SECANT>
+    static tApproximationType approximationType;
+    // highest deviation symbol in use
+    static unsigned last;
 
 #ifdef CLEANUP
-  // pointers to all affine variables
-  static list <AAF*> allAAF;
+    // pointers to all affine variables
+    static list<AAF*> allAAF;
 #endif
 
- public:
-  
-  // constructors
-  AAF(double v0 = 0.0);
-  AAF(double, const double *, const unsigned *, unsigned);
-  AAF(const AAF &);
-  AAF(const AAInterval);
+public:
+    // constructors
+    AAF(double v0 = 0.0);
+    AAF(double, const double*, const unsigned*, unsigned);
+    AAF(const AAF&);
+    AAF(const AAInterval);
 
-  // destructor
-  ~AAF();
+    // destructor
+    ~AAF();
 
-  unsigned int get_class_size(void);
-  unsigned int get_class_size_index(void);
-  unsigned int get_class_size_deviations(void);
+    unsigned int get_class_size(void);
+    unsigned int get_class_size_index(void);
+    unsigned int get_class_size_deviations(void);
 
-  double operator[](unsigned) const;
+    double operator[](unsigned) const;
 
-  bool operator < (const AAF &) const;
-  bool operator <= (const AAF &) const;
-  bool operator > (const AAF &) const;
-  bool operator >= (const AAF &) const;
-  bool operator == (const AAF &) const;
+    bool operator<(const AAF&) const;
+    bool operator<=(const AAF&) const;
+    bool operator>(const AAF&) const;
+    bool operator>=(const AAF&) const;
+    bool operator==(const AAF&) const;
 
-  AAF & operator = (const AAF &);
-  AAF & operator = (const double);
-  AAF operator + (const AAF &) const;
-  AAF operator - (const AAF &) const;
-  AAF operator * (const AAF &);
-  AAF operator / (const AAF &);
-  AAF operator ^ (const int) const;
+    AAF& operator=(const AAF&);
+    AAF& operator=(const double);
+    AAF operator+(const AAF&) const;
+    AAF operator-(const AAF&) const;
+    AAF operator*(const AAF&);
+    AAF operator/(const AAF&);
+    AAF operator^(const int) const;
 
-  AAF operator - () const;
-  AAF & operator += (double);
-  AAF & operator -= (double);
-  AAF & operator *= (double);
-  AAF & operator /= (double);
-  AAF & operator += (const AAF &);
-  AAF & operator -= (const AAF &);
-  AAF & operator *= (const AAF &);
-  AAF operator * (double);
-  AAF operator / (double);
-  AAF operator ^ (const AAF) const;
+    AAF operator-() const;
+    AAF& operator+=(double);
+    AAF& operator-=(double);
+    AAF& operator*=(double);
+    AAF& operator/=(double);
+    AAF& operator+=(const AAF&);
+    AAF& operator-=(const AAF&);
+    AAF& operator*=(const AAF&);
+    AAF operator*(double);
+    AAF operator/(double);
+    AAF operator^(const AAF) const;
 
-  friend std::ostream & operator << (std::ostream &, const AAF &);
- 
-  unsigned getlength() const;
-  double getcenter() const;
+    friend std::ostream& operator<<(std::ostream&, const AAF&);
 
-  AAInterval convert() const;
-  double rad() const;
-  double getMax() const;
-  double getMin() const;
-  double getAbsMax() const;
-  double getAbsMin() const;
-  unsigned getFirstIndex(void) const;
-  unsigned getLastIndex(void) const;
-  
+    unsigned getlength() const;
+    double getcenter() const;
+
+    AAInterval convert() const;
+    double rad() const;
+    double getMax() const;
+    double getMin() const;
+    double getAbsMax() const;
+    double getAbsMin() const;
+    unsigned getFirstIndex(void) const;
+    unsigned getLastIndex(void) const;
+
 #ifdef USE_AAF_EXTENSIONS
-  // special methods declared in aa_aafspecial.c
+    // special methods declared in aa_aafspecial.c
 #ifdef USE_QPF
-  AAF & operator = (const QPF &);
+    AAF& operator=(const QPF&);
 #endif
-  unsigned getData(unsigned*, double*) const;
-  void get(double *, unsigned, unsigned npp = 1);
-  void getPD(double *, unsigned, unsigned, unsigned npp = 1);
-  void getAt(double *, unsigned, unsigned, unsigned npp = 1);
-  void update(double *, unsigned, unsigned npp = 1);
-  unsigned sumup(unsigned);
-  void sumup(double);
-  void sumupall(void);
-  void compact(void);
-  void resize(void) {resize(getLastIndex()-1);};
-  void resize(unsigned int);
-  void resize(unsigned int, unsigned int);
-  void ResizeNewSymbol(unsigned int ind);
-  void addPD(double);
-  double at(unsigned) const;
-  void set(unsigned, double);
-  void setLast(double);
-  void submul(const AAF &, double);
+    unsigned getData(unsigned*, double*) const;
+    void get(double*, unsigned, unsigned npp = 1);
+    void getPD(double*, unsigned, unsigned, unsigned npp = 1);
+    void getAt(double*, unsigned, unsigned, unsigned npp = 1);
+    void update(double*, unsigned, unsigned npp = 1);
+    unsigned sumup(unsigned);
+    void sumup(double);
+    void sumupall(void);
+    void compact(void);
+    void resize(void) { resize(getLastIndex() - 1); };
+    void resize(unsigned int);
+    void resize(unsigned int, unsigned int);
+    void ResizeNewSymbol(unsigned int ind);
+    void addPD(double);
+    double at(unsigned) const;
+    void set(unsigned, double);
+    void setLast(double);
+    void submul(const AAF&, double);
 #endif
 
-  // static methods
-  static tApproximationType getApproximationType(void);
-  static void setApproximationType(tApproximationType);
+    // static methods
+    static tApproximationType getApproximationType(void);
+    static void setApproximationType(tApproximationType);
 
 #ifdef USE_AAF_EXTENSIONS
-  // this method must be treaten carefully !!!
-  static void setDefault(const unsigned val = 0);
+    // this method must be treaten carefully !!!
+    static void setDefault(const unsigned val = 0);
 #endif
-  static unsigned getDefault(void);
+    static unsigned getDefault(void);
 #ifdef CLEANUP
-  static void cleanup(double);
+    static void cleanup(double);
 #endif
 
-  // friend methods
-  friend AAF sqrt(const AAF &);
-  friend AAF sqr(const AAF &);
-  friend AAF isqrt(const AAF &);
-  friend AAF exp(const AAF &);
-  friend AAF log(const AAF &);
-  friend AAF logexp(const AAF &);
-  friend AAF atan(const AAF &);
-  friend AAF tanh(const AAF &);
-  friend AAF inv(const AAF &);
-  friend AAF sin(const AAF &);
-  friend AAF heaviside(const AAF &);
-  friend AAF aaf_pow( const AAF&, const AAF&);
-  friend AAF aaf_pow( const AAF&, const double&);
-  friend AAF aaf_pow( const double&, const AAF&);
+    // friend methods
+    friend AAF sqrt(const AAF&);
+    friend AAF sqr(const AAF&);
+    friend AAF isqrt(const AAF&);
+    friend AAF exp(const AAF&);
+    friend AAF log(const AAF&);
+    friend AAF logexp(const AAF&);
+    friend AAF atan(const AAF&);
+    friend AAF tanh(const AAF&);
+    friend AAF inv(const AAF&);
+    friend AAF sin(const AAF&);
+    friend AAF heaviside(const AAF&);
+    friend AAF aaf_pow(const AAF&, const AAF&);
+    friend AAF aaf_pow(const AAF&, const double&);
+    friend AAF aaf_pow(const double&, const AAF&);
 #ifdef USE_AAF_EXTENSIONS
-  friend AAF mos(AAF &, AAF &);
-  friend AAF arg(AAF &, AAF &);
-  friend AAF mag(const AAF &, const AAF &);
-  friend AAF magdb(AAF &, AAF &);
+    friend AAF mos(AAF&, AAF&);
+    friend AAF arg(AAF&, AAF&);
+    friend AAF mag(const AAF&, const AAF&);
+    friend AAF magdb(AAF&, AAF&);
 #endif
 
 private:
-  static unsigned inclast();
+    static unsigned inclast();
+
 public:
-  void aafprint() const;
+    void aafprint() const;
 };
 
 // binary operators
-AAF operator * (double, const AAF);
-AAF operator / (double, const AAF);
-AAF operator + (double, const AAF);
-AAF operator - (double, const AAF);
+AAF operator*(double, const AAF);
+AAF operator/(double, const AAF);
+AAF operator+(double, const AAF);
+AAF operator-(double, const AAF);
 
 // unary functions
-AAF sqrt(const AAF &);
-AAF isqrt(const AAF &);
-AAF cos(const AAF &);
-AAF tan(const AAF &);
-AAF cotan(const AAF &);
-AAF exp(const AAF &);
-AAF log(const AAF &);
-AAF logexp(const AAF &);
-AAF atan(const AAF &);
-AAF tanh(const AAF &);
-AAF heaviside(const AAF &);
+AAF sqrt(const AAF&);
+AAF isqrt(const AAF&);
+AAF cos(const AAF&);
+AAF tan(const AAF&);
+AAF cotan(const AAF&);
+AAF exp(const AAF&);
+AAF log(const AAF&);
+AAF logexp(const AAF&);
+AAF atan(const AAF&);
+AAF tanh(const AAF&);
+AAF heaviside(const AAF&);
 
 #ifdef USE_AAF_EXTENSIONS
 // binary functions
-AAF mos(AAF &, AAF &);
-AAF arg(AAF &, AAF &);
-AAF mag(const AAF &, const AAF &);
-AAF magdb(AAF &, AAF &);
+AAF mos(AAF&, AAF&);
+AAF arg(AAF&, AAF&);
+AAF mag(const AAF&, const AAF&);
+AAF magdb(AAF&, AAF&);
 #endif
 
 // AAF inline methods
@@ -236,9 +235,8 @@ AAF magdb(AAF &, AAF &);
  ************************************************************/
 inline double AAF::getcenter() const
 {
-  return cvalue;
+    return cvalue;
 }
-
 
 /************************************************************
  * Method:        power
@@ -250,11 +248,10 @@ inline double AAF::getcenter() const
  *            int         : exponent
  *   Output : AAF         : AAF result
  ************************************************************/
-inline AAF power(const AAF & P, int exp)
+inline AAF power(const AAF& P, int exp)
 {
-  return (P^exp);
+    return (P ^ exp);
 }
-
 
 /************************************************************
  * Method:        sqr
@@ -265,11 +262,10 @@ inline AAF power(const AAF & P, int exp)
  *   Input  : const AAF & : AAF argument
  *   Output : AAF         : AAF result
  ************************************************************/
-inline AAF sqr(const AAF & P)
+inline AAF sqr(const AAF& P)
 {
-  return (P^2);
+    return (P ^ 2);
 }
-
 
 /************************************************************
  * Method:        pow
@@ -281,11 +277,10 @@ inline AAF sqr(const AAF & P)
  *            int         : exponent
  *   Output : AAF         : AAF result
  ************************************************************/
-inline AAF pow(const AAF & P, int exp)
+inline AAF pow(const AAF& P, int exp)
 {
-  return (P^exp);
+    return (P ^ exp);
 }
-
 
 /************************************************************
  * Method:        setDefault
@@ -300,7 +295,7 @@ inline AAF pow(const AAF & P, int exp)
 #ifdef USE_AAF_EXTENSIONS
 inline void AAF::setDefault(const unsigned val)
 {
-  last = val;
+    last = val;
 }
 #endif
 
@@ -313,9 +308,9 @@ inline void AAF::setDefault(const unsigned val)
  *   Input  : -
  *   Output : unsigned : highest symbol in use
  ************************************************************/
-inline unsigned AAF::getDefault(void) 
+inline unsigned AAF::getDefault(void)
 {
-  return last;
+    return last;
 }
 
 /************************************************************
@@ -329,7 +324,7 @@ inline unsigned AAF::getDefault(void)
  ************************************************************/
 inline unsigned AAF::inclast()
 {
-  return ++last;
+    return ++last;
 }
 
 /************************************************************
@@ -343,7 +338,7 @@ inline unsigned AAF::inclast()
  ************************************************************/
 inline unsigned AAF::getlength() const
 {
-  return length;
+    return length;
 }
 
 /************************************************************
@@ -357,11 +352,10 @@ inline unsigned AAF::getlength() const
  ************************************************************/
 inline unsigned AAF::getFirstIndex(void) const
 {
-  if (length > 0)
-  {
-    return indexes[0];
-  }
-  return 0;
+    if (length > 0) {
+        return indexes[0];
+    }
+    return 0;
 }
 
 /************************************************************
@@ -375,11 +369,10 @@ inline unsigned AAF::getFirstIndex(void) const
  ************************************************************/
 inline unsigned AAF::getLastIndex(void) const
 {
-  if (length > 0)
-  {
-    return indexes[length-1];
-  }
-  return 0;
+    if (length > 0) {
+        return indexes[length - 1];
+    }
+    return 0;
 }
 
 /************************************************************
@@ -393,7 +386,7 @@ inline unsigned AAF::getLastIndex(void) const
  ************************************************************/
 inline tApproximationType AAF::getApproximationType(void)
 {
-  return approximationType;
+    return approximationType;
 }
 
 /************************************************************
@@ -407,23 +400,22 @@ inline tApproximationType AAF::getApproximationType(void)
  ************************************************************/
 inline void AAF::setApproximationType(tApproximationType t)
 {
-  approximationType = t;
+    approximationType = t;
 }
 
 inline unsigned int AAF::get_class_size(void)
 {
-  return (sizeof(this) + length * sizeof(indexes) + size * sizeof(deviations));
+    return (sizeof(this) + length * sizeof(indexes) + size * sizeof(deviations));
 }
 
 inline unsigned int AAF::get_class_size_index(void)
 {
-  return (length * sizeof(indexes));
+    return (length * sizeof(indexes));
 }
 
 inline unsigned int AAF::get_class_size_deviations(void)
 {
-  return (size * sizeof(deviations));
+    return (size * sizeof(deviations));
 }
 
-
-#endif  // AA_AAF_H
+#endif // AA_AAF_H

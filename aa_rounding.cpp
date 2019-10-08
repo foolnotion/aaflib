@@ -21,21 +21,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 #include "aa_rounding.h"
 
 // Change the rounding mode
 
 unsigned int aa_fesetround(aa_rnd_t mask)
 {
-  return fesetround(mask);	
+    return fesetround(mask);
 }
-
 
 // Save the current rounding mode
 
 aa_rnd_t aa_fegetround(void)
 {
-  return fegetround();
+    return fegetround();
 }
-

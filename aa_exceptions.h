@@ -42,43 +42,40 @@
  * Distribution only by express authority of the IMS.
  */
 
-
 #ifndef AAF_EXCEPTIONS_H
 #define AAF_EXCEPTIONS_H
 
-#define AAF_ERROR_EXCEPTION     0
-#define AAF_DIVZERO_EXCEPTION   1
-#define AAF_NEGROOT_EXCEPTION   2
-#define AAF_NEGLOG_EXCEPTION    3
-#define AAF_NEGBASE_EXCEPTION    4
+#define AAF_ERROR_EXCEPTION 0
+#define AAF_DIVZERO_EXCEPTION 1
+#define AAF_NEGROOT_EXCEPTION 2
+#define AAF_NEGLOG_EXCEPTION 3
+#define AAF_NEGBASE_EXCEPTION 4
 
-#include <string>
 #include <exception>
+#include <string>
 
-class AAF_Exception: public std::exception
-{
+class AAF_Exception : public std::exception {
 public:
-  std::string message;
+    std::string message;
 
-  int errorCode;
+    int errorCode;
 
-  double lValue;
+    double lValue;
 
-  double hValue;
+    double hValue;
 
 public:
+    AAF_Exception(const int, const char*, const double);
 
-  AAF_Exception(const int, const char *, const double);
+    AAF_Exception(const int, const char*, const double, const double);
 
-  AAF_Exception(const int, const char *, const double, const double);
+    AAF_Exception(const int, const char*);
 
-  AAF_Exception(const int, const char *);
+    ~AAF_Exception() throw();
 
-  ~AAF_Exception() throw();
+    const char* what() const throw();
 
-  const char* what() const throw ();
-
-  void report() const throw ();
+    void report() const throw();
 };
 
 #endif

@@ -21,20 +21,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 #include "aa_interval.h"
 #include "aa_rounding.h"
+#include <cmath>
 #include <cstdio>
 #include <iostream>
-#include <cmath>
 
-#define PI (4*atan(1.0))
-
+#define PI (4 * atan(1.0))
 
 // AAInterval(), modlo(), modhi(), modlohi() are not
 // inline functions as they arent used by the lib
 // but they are useful for applications
-
 
 /************************************************************
  * Method:        AAInterval
@@ -46,12 +43,11 @@
  *   Input  : -
  *   Output : -
  ************************************************************/
-AAInterval:: AAInterval():
-  lo(0), 
-  hi(0)
+AAInterval::AAInterval()
+    : lo(0)
+    , hi(0)
 {
 }
-
 
 /************************************************************
  * Method:        Operator = 
@@ -62,17 +58,15 @@ AAInterval:: AAInterval():
  *   Input  : const AAInterval : input Interval
  *   Output : -
  ************************************************************/
-AAInterval & AAInterval::operator = (const AAInterval & I)
+AAInterval& AAInterval::operator=(const AAInterval& I)
 {
-  if (&I != this)
-  {
-    lo = I.lo;
-    hi = I.hi;
-  }
+    if (&I != this) {
+        lo = I.lo;
+        hi = I.hi;
+    }
 
-  return *this;
+    return *this;
 }
-
 
 /************************************************************
  * Method:        modlo
@@ -85,9 +79,8 @@ AAInterval & AAInterval::operator = (const AAInterval & I)
  ************************************************************/
 void AAInterval::modlo(const double low)
 {
-  lo=low;
+    lo = low;
 }
-
 
 /************************************************************
  * Method:        modhi
@@ -100,9 +93,8 @@ void AAInterval::modlo(const double low)
  ************************************************************/
 void AAInterval::modhi(const double high)
 {
-  hi=high;
+    hi = high;
 }
-
 
 /************************************************************
  * Method:        modboth
@@ -116,10 +108,9 @@ void AAInterval::modhi(const double high)
  ************************************************************/
 void AAInterval::modlohi(const double low, const double high)
 {
-  lo=low;
-  hi=high;
+    lo = low;
+    hi = high;
 }
-
 
 /************************************************************
  * Method:        mid
@@ -133,21 +124,20 @@ void AAInterval::modlohi(const double low, const double high)
 double AAInterval::mid() const
 {
 
-  double t0,t1;
+    double t0, t1;
 
-  aa_rnd_t mode = aa_fegetround();
+    aa_rnd_t mode = aa_fegetround();
 
-  aa_fesetround(AA_DOWNWARD);
-  t0 = lo*0.5;
+    aa_fesetround(AA_DOWNWARD);
+    t0 = lo * 0.5;
 
-  aa_fesetround(AA_UPWARD);
-  t1 = hi*0.5;
+    aa_fesetround(AA_UPWARD);
+    t1 = hi * 0.5;
 
-  aa_fesetround(mode);
+    aa_fesetround(mode);
 
-  return t0+t1;
+    return t0 + t1;
 }
-
 
 /************************************************************
  * Method:        radius
@@ -160,23 +150,22 @@ double AAInterval::mid() const
  ************************************************************/
 double AAInterval::radius() const
 {
-  double m = mid();
+    double m = mid();
 
-  double t0,t1;
+    double t0, t1;
 
-  aa_rnd_t mode = aa_fegetround();
+    aa_rnd_t mode = aa_fegetround();
 
-  aa_fesetround(AA_DOWNWARD);
-  t0 = m-lo;
+    aa_fesetround(AA_DOWNWARD);
+    t0 = m - lo;
 
-  aa_fesetround(AA_UPWARD);
-  t1 = hi-m;
+    aa_fesetround(AA_UPWARD);
+    t1 = hi - m;
 
-  aa_fesetround(mode);
+    aa_fesetround(mode);
 
-  return (t0 >= t1 ? t0 : t1);
+    return (t0 >= t1 ? t0 : t1);
 }
-
 
 /************************************************************
  * Method:        operator >> 
@@ -188,30 +177,27 @@ double AAInterval::radius() const
  *   Input  : std::istream & : input stream
  *   Output : AAInterval &   : interval
  ************************************************************/
-std::istream & operator >> (std::istream & s, AAInterval & I)
+std::istream& operator>>(std::istream& s, AAInterval& I)
 {
-  double lo = 0, hi = 0;
-  char c = 0;
+    double lo = 0, hi = 0;
+    char c = 0;
 
-  s >> c;
-  if (c == '[')
-    {
-      s >> lo >> c;
-      if (c == ',') s >> hi >> c;
-      //if (c != ']') s.clear(ios_base::badbit);
+    s >> c;
+    if (c == '[') {
+        s >> lo >> c;
+        if (c == ',')
+            s >> hi >> c;
+        //if (c != ']') s.clear(ios_base::badbit);
+    } else {
+        //s.putback(c);
+        s >> lo;
     }
-  else
-  {
-    //s.putback(c);
-    s >> lo;
-  }
 
-  if (s) I = AAInterval(lo, hi);
+    if (s)
+        I = AAInterval(lo, hi);
 
-  return s;
-
+    return s;
 }
-
 
 /************************************************************
  * Method:        intvprint
@@ -224,9 +210,8 @@ std::istream & operator >> (std::istream & s, AAInterval & I)
  ************************************************************/
 void AAInterval::intvprint() const
 {
-  printf("[%f,%f]\n", lo, hi);
+    printf("[%f,%f]\n", lo, hi);
 }
-
 
 /************************************************************
  * Method:        operator <<
@@ -238,15 +223,14 @@ void AAInterval::intvprint() const
  *            AAInterval &   : interval
  *   Output : -
  ************************************************************/
-std::ostream & operator << (std::ostream & s, const AAInterval &I)
+std::ostream& operator<<(std::ostream& s, const AAInterval& I)
 {
-  // s.setf(0, ios_base::floatfield);
-  // cause we don't want to display in scientific format
+    // s.setf(0, ios_base::floatfield);
+    // cause we don't want to display in scientific format
 
-  s << "[" << I.getlo() << "," << I.gethi() << "]\n";
-  return s;
+    s << "[" << I.getlo() << "," << I.gethi() << "]\n";
+    return s;
 }
-
 
 /************************************************************
  * Method:        mintrigo
@@ -259,21 +243,21 @@ std::ostream & operator << (std::ostream & s, const AAInterval &I)
  *   Input  : const AAInterval & : interval
  *   Output : AAInterval         : interval
  ************************************************************/
-AAInterval mintrigo(const AAInterval & I)
+AAInterval mintrigo(const AAInterval& I)
 {
 
-  // This function is no more needed
-  // for our new algorithm of the sine of an AAF
+    // This function is no more needed
+    // for our new algorithm of the sine of an AAF
 
-  double a = I.getlo();
-  double b = I.gethi();
-  double t1, t2 ;
+    double a = I.getlo();
+    double b = I.gethi();
+    double t1, t2;
 
-  t1 = floor(a/(2*PI));
-  t2 = b-a;
+    t1 = floor(a / (2 * PI));
+    t2 = b - a;
 
-  a=a-(t1*2*PI);
-  b=a+t2;
+    a = a - (t1 * 2 * PI);
+    b = a + t2;
 
-  return AAInterval(a,b);
+    return AAInterval(a, b);
 }

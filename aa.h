@@ -21,14 +21,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 #ifndef AA_H
 #define AA_H
 
-
 #include "aa_aaf.h"
-#include "aa_interval.h"
 #include "aa_exceptions.h"
+#include "aa_interval.h"
 
-
-#endif  // AA_H
+#endif // AA_H

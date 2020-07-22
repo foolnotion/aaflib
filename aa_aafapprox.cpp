@@ -627,7 +627,7 @@ AAF aaf_pow(const AAF& base, const AAF& exp)
     y2 = 0.0;
     x3 = 0.0;
     y3 = 0.0;
-    last_eps = NULL;
+    last_eps = 0;
 
     // Merge vector of indexes and construct array for the deviations and the epsilon
     //TODO: Pr�fen: mehrere unabh�ngige Abweichungssymbole, die nur in einer AAF vorkommen? - sollte egal sein

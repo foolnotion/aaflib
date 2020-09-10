@@ -680,7 +680,7 @@ void AAF::resize(unsigned int ind)
     if (!length)
         return;
 
-    if ((ind == 0) or (ind > indexes[length - 1]))
+    if ((ind == 0) || (ind > indexes[length - 1]))
         return;
 
     // get total deviation of indexes <= ind
@@ -727,7 +727,7 @@ void AAF::ResizeNewSymbol(unsigned int ind)
     if (!length)
         return;
 
-    if ((ind == 0) or (ind > indexes[length - 1]))
+    if ((ind == 0) || (ind > indexes[length - 1]))
         return;
 
     // get total deviation of indexes <= ind

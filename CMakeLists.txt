@@ -16,7 +16,12 @@ add_library(
     ${AAF_SOURCE}
 )
 target_compile_definitions(aaf.lin64 PRIVATE LIN64 USE_AAF_EXTENSIONS)
+
+if(MSVC)
+else()
 target_compile_options(aaf.lin64 PRIVATE -Wall -Weffc++ -Wno-deprecated -O3)
+endif()
+
 set_target_properties(
     aaf.lin64 PROPERTIES
     SOVERSION 0
@@ -35,7 +40,10 @@ set_target_properties(
     )
 
 target_compile_definitions(aaf.lin64.static PRIVATE LIN64 USE_AAF_EXTENSIONS)
+if(MSVC)
+else()
 target_compile_options(aaf.lin64.static PRIVATE -Wall -Weffc++ -Wno-deprecated -O3)
+endif()
 set_target_properties(aaf.lin64.static PROPERTIES OUTPUT_NAME aaf.lin64)
 
 include(GNUInstallDirs)

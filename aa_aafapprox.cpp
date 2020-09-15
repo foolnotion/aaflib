@@ -838,6 +838,22 @@ AAF aaf_pow(const AAF& base, const AAF& exp)
 }
 
 /************************************************************
+ * Operator:      ^
+ * Author & Date: Bogdan Burlacu - 15.09.2020 
+ * Description:
+ *   computes the power function
+ *
+ *   Input  : double	: exponent
+ *   Output : AAF       : AAF result
+ ************************************************************/
+AAF AAF::operator^(const double exp) const 
+{
+    AAF base = *this;
+    AAF temp = aaf_pow(*this, exp);
+    return temp;
+}
+
+/************************************************************
  * Method:      aaf_pow
  * Author & Date: Anna Krause - 01.03.2010
  * Description:

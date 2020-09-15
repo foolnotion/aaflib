@@ -101,6 +101,7 @@ public:
     AAF operator*(const AAF&);
     AAF operator/(const AAF&);
     AAF operator^(const int) const;
+    AAF operator^(const double) const;
 
     AAF operator-() const;
     AAF& operator+=(double);

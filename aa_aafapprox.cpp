@@ -948,7 +948,7 @@ AAF aaf_pow(const AAF& base, const double& exp)
         result.deviations = new double[result.size];
         result.indexes = new unsigned[result.size];
 
-        for (unsigned i = 0; i < length_b + 1; i++) {
+        for (unsigned i = 0; i < length_b; i++) {
             result.indexes[i] = ind_b[i];
             result.deviations[i] = beta * (devs_b[i]);
         }

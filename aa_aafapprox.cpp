@@ -1365,7 +1365,7 @@ AAF exp(const AAF& P)
     double r;
     double alpha, dzeta, delta;
 
-    bool chebyshevFailed = false;
+    //bool chebyshevFailed = false;
 
     if (P.length == 0) {
         AAF Temp(exp(P.cvalue));
@@ -1401,8 +1401,8 @@ AAF exp(const AAF& P)
 
         dzeta = fa - a * alpha - delta;
 
-        if ((fa - 2.0 * delta) < 0.0)
-            chebyshevFailed = true;
+        //if ((fa - 2.0 * delta) < 0.0)
+        //    chebyshevFailed = true;
 
 #ifdef AAF_DEBUG
         fprintf(stdout, "Function: exp(x)\n");
